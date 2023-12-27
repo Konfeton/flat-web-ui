@@ -176,10 +176,10 @@ function MainPage(props) {
                                     <label htmlFor="price" className="form-label">Цена</label>
                                     <div className="row">
                                         <div class="col">
-                                            <input type="number" class="form-control" placeholder="От" onChange={(e) => setMinPrice(e.target.value)}/>
+                                            <input type="number" class="form-control" placeholder="От" min="0" onChange={(e) => setMinPrice(e.target.value)}/>
                                         </div>
                                         <div className="col">
-                                            <input type="number" className="form-control" placeholder="До" onChange={(e) => setMaxPrice(e.target.value)}/>
+                                            <input type="number" className="form-control" placeholder="До" max={"3000000"} onChange={(e) => setMaxPrice(e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
