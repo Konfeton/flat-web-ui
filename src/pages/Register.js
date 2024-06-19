@@ -34,12 +34,12 @@ const Register = () => {
             // Set default authorization header
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-            alert('Login successful');
+            alert('Register successful');
             navigate("/");
             window.location.reload();
         } catch (error) {
-            console.error('There was an error logging in!', error);
-            alert('Login failed');
+            console.error('There was an error registering!', error);
+            alert('Register failed');
         }
     };
 

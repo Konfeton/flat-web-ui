@@ -11,6 +11,7 @@ import UserDashboard from "./pages/UserDashboard";
 import Liked from "./pages/Liked";
 import Rated from "./pages/Rated";
 import RateFlat from "./pages/RateFlat";
+import ImportancePage from "./pages/ImportancePage";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
                     <Route path="/dashboard" element={<UserDashboard />} />
                     <Route path="/liked" element={<Liked />} />
                     <Route path="/rated" element={<Rated />} />
+                    <Route path="/smart-search" element={<ImportancePage />} />
                 </Routes>
                 <Footer/>
             </div>

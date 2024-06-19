@@ -91,9 +91,10 @@ const FlatsPage = () => {
                         <div className="d-flex justify-content-end mb-3">
                             <label htmlFor="sortingSelect" className="me-2">Сортировать по:</label>
                             <select id="sortingSelect" onChange={handleSorting}>
-                                <option value="createdAt:asc">Новые</option>
+                                <option value="createdAt:desc">Новые</option>
                                 <option value="price:asc">Дешевые</option>
                                 <option value="price:desc">Дорогие</option>
+                                <option value="numberOfViews:desc">Популярные</option>
                             </select>
                         </div>
                     </div>
@@ -105,7 +106,7 @@ const FlatsPage = () => {
                     <div className="card-width" style={{ width: '20%' }}>
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">Filter Menu</h5>
+                                <h5 className="card-title">Фильтры</h5>
                                 <div className="mb-3">
                                     <label htmlFor="price" className="form-label">Цена</label>
                                     <div className="row">
@@ -159,7 +160,13 @@ const FlatsPage = () => {
                                     <div className="container">
                                         <div className="row row-cols-2">
                                             <div className="col">
-                                                <input type="checkbox" name="typeOfHouse" className="form-check-input" onChange={handleResaleChange} />
+                                                <input type="checkbox" name="typeOfHouse" className="form-check-input"
+                                                       onChange={handleResaleChange}/>
+                                                <label className="form-check-label">Новостройка</label>
+                                            </div>
+                                            <div className="col">
+                                                <input type="checkbox" name="typeOfHouse" className="form-check-input"
+                                                       onChange={handleResaleChange}/>
                                                 <label className="form-check-label">Вторичка</label>
                                             </div>
                                         </div>

@@ -63,6 +63,9 @@ function Header() {
                             </li>
                         </>
                     )}
+                    <li className="nav-item-left">
+                        <Link to="/smart-search">Умный поиск</Link>
+                    </li>
                 </ul>
             </nav>
         </header>

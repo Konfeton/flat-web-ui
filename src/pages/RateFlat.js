@@ -25,6 +25,9 @@ const RateFlat = () => {
             walling: '',
             timeToMetro: 0,
             timeToMall: 0,
+            timeToClinic: 0,
+            timeToKindergarten: 0,
+            timeToSchool: 0,
             district: '',
             location: {
                 address: '',
@@ -47,12 +50,16 @@ const RateFlat = () => {
         walling: 1,
         timeToMetro: 1,
         timeToMall: 1,
+        timeToClinic: 1,
+        timeToKindergarten: 1,
+        timeToSchool: 1,
         district: 1,
         address: 1
     });
 
     useEffect(() => {
         fetchFlatDetails();
+        fetchRatings();
     }, [id]);
 
     const fetchFlatDetails = async () => {
@@ -61,6 +68,17 @@ const RateFlat = () => {
             setData(response.data);
         } catch (error) {
             console.error('Error fetching flat details', error);
+        }
+    };
+
+    const fetchRatings = async () => {
+        try {
+            const response = await axiosInstance.get(`/marks/${id}`);
+            setRatings(response.data);
+            if (response.data)
+                alert('Вы уже оценивали эту квартиру')
+        } catch (error) {
+            console.error('Error fetching ratings', error);
         }
     };
 
@@ -110,19 +128,20 @@ const RateFlat = () => {
 
     return (
         <div className="container mt-5">
-            <h2>Rate Flat</h2>
+            <h2>Оценка квартиры</h2>
+            <div>Поставте оценку каждому параметру квартиры, где 1 - плохо, 5 - отлично</div>
             <table className="table">
                 <thead>
                 <tr>
-                    <th>Parameter</th>
-                    <th>Value</th>
-                    <th>Rating</th>
+                    <th>Параметр</th>
+                    <th>Значение</th>
+                    <th>Оценка</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>Price</td>
-                    <td>{data.price}</td>
+                    <td>Цена</td>
+                    <td>{data.price}$</td>
                     <td>
                         <select
                             value={ratings.price}
@@ -135,7 +154,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Number of Rooms</td>
+                    <td>Количество комнат</td>
                     <td>{data.numberOfRooms}</td>
                     <td>
                         <select
@@ -149,7 +168,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Year</td>
+                    <td>Год</td>
                     <td>{data.year}</td>
                     <td>
                         <select
@@ -163,7 +182,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Floor</td>
+                    <td>Этаж</td>
                     <td>{data.floor}</td>
                     <td>
                         <select
@@ -177,7 +196,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Number of Floors</td>
+                    <td>Количество этажей</td>
                     <td>{data.numberOfFloors}</td>
                     <td>
                         <select
@@ -191,7 +210,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Total Area</td>
+                    <td>Общая площадь</td>
                     <td>{data.area.total}</td>
                     <td>
                         <select
@@ -205,7 +224,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Living Area</td>
+                    <td>Жилая площадь</td>
                     <td>{data.area.living}</td>
                     <td>
                         <select
@@ -219,7 +238,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Kitchen Area</td>
+                    <td>Площадь кухни</td>
                     <td>{data.area.kitchen}</td>
                     <td>
                         <select
@@ -233,7 +252,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Walling</td>
+                    <td>Материал стен</td>
                     <td>{data.flatParams.walling}</td>
                     <td>
                         <select
@@ -247,7 +266,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Time to Metro</td>
+                    <td>Время до метро</td>
                     <td>{data.flatParams.timeToMetro}</td>
                     <td>
                         <select
@@ -261,7 +280,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Time to Mall</td>
+                    <td>Время до ТЦ</td>
                     <td>{data.flatParams.timeToMall}</td>
                     <td>
                         <select
@@ -274,9 +293,51 @@ const RateFlat = () => {
                         </select>
                     </td>
                 </tr>
+                <tr>
+                    <td>Время до поликлинники</td>
+                    <td>{data.flatParams.timeToMall}</td>
+                    <td>
+                        <select
+                            value={ratings.timeToClinic}
+                            onChange={(e) => handleRatingChange('timeToClinic', e.target.value)}
+                        >
+                            {[1, 2, 3, 4, 5].map((val) => (
+                                <option key={val} value={val}>{val}</option>
+                            ))}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Время до садика</td>
+                    <td>{data.flatParams.timeToMall}</td>
+                    <td>
+                        <select
+                            value={ratings.timeToKindergarten}
+                            onChange={(e) => handleRatingChange('timeToKindergarten', e.target.value)}
+                        >
+                            {[1, 2, 3, 4, 5].map((val) => (
+                                <option key={val} value={val}>{val}</option>
+                            ))}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Время до школы</td>
+                    <td>{data.flatParams.timeToMall}</td>
+                    <td>
+                        <select
+                            value={ratings.timeToKindergarten}
+                            onChange={(e) => handleRatingChange('timeToSchool', e.target.value)}
+                        >
+                            {[1, 2, 3, 4, 5].map((val) => (
+                                <option key={val} value={val}>{val}</option>
+                            ))}
+                        </select>
+                    </td>
+                </tr>
 
                 <tr>
-                    <td>District</td>
+                    <td>Район</td>
                     <td>{data.flatParams.district}</td>
                     <td>
                         <select
@@ -290,7 +351,7 @@ const RateFlat = () => {
                     </td>
                 </tr>
                 <tr>
-                    <td>Address</td>
+                    <td>Адресс</td>
                     <td>{data.flatParams.location.address}</td>
                     <td>
                         <select
@@ -305,7 +366,7 @@ const RateFlat = () => {
                 </tr>
                 </tbody>
             </table>
-            <button className="btn btn-primary" onClick={handleSubmit}>Rate</button>
+            <button className="btn btn-primary" onClick={handleSubmit}>Оценить</button>
         </div>
     );
 };

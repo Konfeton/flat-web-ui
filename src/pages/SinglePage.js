@@ -1,12 +1,13 @@
-import {Link, useParams} from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import axiosInstance from "../util/axiosInstance";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as filledHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 function SinglePage() {
 
-    const token = localStorage.getItem("token")
-
+    const token = localStorage.getItem("token");
     const { id } = useParams();
     const [data, setData] = useState({
         price: 0,
@@ -36,16 +37,48 @@ function SinglePage() {
             description: ''
         }
     });
+    const [isLiked, setIsLiked] = useState(false);
 
     useEffect(() => {
         axiosInstance.get(`/flats/${id}`)
             .then(response => {
                 setData(response.data);
+                if (token) {
+                    checkIfLiked(response.data.id);
+                }
             })
             .catch(err => {
                 console.log(err);
             });
-    }, [id]);
+    }, [id, token]);
+
+    const checkIfLiked = async (flatId) => {
+        try {
+            const response = await axiosInstance.get('/flats/liked');
+            const likedFlats = response.data.map(flat => flat.id);
+            setIsLiked(likedFlats.includes(flatId));
+        } catch (error) {
+            console.error('Error fetching liked flats', error);
+        }
+    };
+
+    const handleLikeClick = async () => {
+        if (isLiked) {
+            try {
+                await axiosInstance.delete('/flats/liked', { data: { flatId: id } });
+                setIsLiked(false);
+            } catch (error) {
+                console.error('Error unliking flat', error);
+            }
+        } else {
+            try {
+                await axiosInstance.post('/flats/liked', { flatId: id });
+                setIsLiked(true);
+            } catch (error) {
+                console.error('Error liking flat', error);
+            }
+        }
+    };
 
     let typeOfWalling;
     switch (data.flatParams.walling) {
@@ -117,6 +150,14 @@ function SinglePage() {
                             </div>
                             <div className="col">
                                 <div className="mb-3">
+                                    {token && (
+                                        <FontAwesomeIcon
+                                            icon={isLiked ? filledHeart : regularHeart}
+                                            size="2x"
+                                            color={isLiked ? 'red' : 'grey'}
+                                            onClick={handleLikeClick}
+                                        />
+                                    )}
                                     <p>Размещено:</p>
                                     <p>{`${data.createdAt}`}</p>
                                     <p>последний раз редактировалось:</p>
@@ -127,34 +168,30 @@ function SinglePage() {
                                         <Link to={`/flats/${id}/rate`}>
                                             <button>Оценить квартиру</button>
                                         </Link>
-
                                     </>
                                 ) : (
-                                    <>
-                                    </>
+                                    <></>
                                 )}
                             </div>
                         </div>
 
                     </div>
 
-                {/* Description */}
-                <div className="row row-cols-2">
-                    <div className="ms-5 mt-3 col-7">
-                        <p>{data.flatParams.description}</p>
+                    {/* Description */}
+                    <div className="row row-cols-2">
+                        <div className="ms-5 mt-3 col-7">
+                            <p>{data.flatParams.description}</p>
+                        </div>
                     </div>
 
-
-                </div>
-
-                {/* Address */}
-                <div className="row">
-                    <div className="col-md-12 ms-5">
-                        <h2>{data.flatParams.location.address}</h2>
+                    {/* Address */}
+                    <div className="row">
+                        <div className="col-md-12 ms-5">
+                            <h2>{data.flatParams.location.address}</h2>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 }
